@@ -1,0 +1,20 @@
+[Unit]
+Description=Cloudflare Quick Tunnel -> Binance TV Bridge (ephemeral URL)
+After=network-online.target binance-tv-bridge.service
+Wants=network-online.target
+Requires=binance-tv-bridge.service
+
+[Service]
+Type=simple
+User=bridge
+Group=bridge
+# Quick tunnel: prints an https://<random>.trycloudflare.com URL to the journal.
+# NOTE: that URL changes every restart — fine for testing, replace with a named
+# tunnel (deploy/cloudflared_setup.md) before relying on it for live trading.
+ExecStart=/usr/local/bin/cloudflared tunnel --no-autoupdate --url http://localhost:8080
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

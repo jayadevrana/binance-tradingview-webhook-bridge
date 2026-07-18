@@ -1,0 +1,23 @@
+[Unit]
+Description=Binance x TradingView Webhook Bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=bridge
+Group=bridge
+WorkingDirectory=/opt/binance-tv-bridge
+EnvironmentFile=/opt/binance-tv-bridge/.env
+ExecStart=/opt/binance-tv-bridge/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8080 --workers 1
+Restart=always
+RestartSec=3
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/binance-tv-bridge/logs
+
+[Install]
+WantedBy=multi-user.target
